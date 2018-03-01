@@ -17,7 +17,6 @@ class bcolors:
 	UNDERLINE = '\033[4m'
 
 class MyServerProtocol(WebSocketServerProtocol):
-
 	def onConnect(self, request):
 		print("Client connecting: {0}".format(request.peer))
 
@@ -35,9 +34,6 @@ class MyServerProtocol(WebSocketServerProtocol):
 	
 	def onClose(self, wasClean, code, reason):
 		print("WebSocket connection closed: {0}".format(reason))
-
-	def getNameFromOpenBucket(self, bucket_host):
-		pass
 
 def processBucket(bucket_name):
 	print("***********************************************************")
