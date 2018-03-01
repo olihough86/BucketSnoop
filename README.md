@@ -5,6 +5,9 @@ A Firefox extension and WebSocket handler that checks s3 buckets while your brow
 
 # Setup
 ## Server
+
+* For now you need [AWS CLI](https://aws.amazon.com/cli/) installed and configured, boto3 looks in ~/.aws/credentials 
+
 Clone the repo
 
 Change to the /BucketSnoopServer/ directory
