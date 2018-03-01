@@ -45,7 +45,7 @@ function logHeaders(requestDetails) {
                 localStorage.setItem(url.hostname, 1);
                 var msg = {
                     "type": 2,
-                    "url": url
+                    "bucketHost": url.hostname
                 }
                 socket.send(JSON.stringify(msg));
             }

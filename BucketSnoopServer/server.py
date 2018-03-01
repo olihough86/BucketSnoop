@@ -4,7 +4,7 @@ import requests
 from pprint import pprint
 from botocore.exceptions import ClientError
 from autobahn.twisted.websocket import WebSocketServerProtocol, WebSocketServerFactory
-
+from bs4 import BeautifulSoup
 
 class bcolors:
 	HEADER = '\033[95m'
@@ -30,7 +30,8 @@ class MyServerProtocol(WebSocketServerProtocol):
 			bucket_name = msg['bucketName']
 			processBucket(bucket_name)
 		if mtype == 2:
-			print(bcolors.OKBLUE + "File: " + msg['url'] + " - served from s3" + bcolors.ENDC)
+			bucket_host = msg['bucketHost']
+			getBuckedNameFromHost(bucket_host)
 	
 	def onClose(self, wasClean, code, reason):
 		print("WebSocket connection closed: {0}".format(reason))
@@ -64,6 +65,18 @@ def processBucket(bucket_name):
 			print(bcolors.OKGREEN + "Object Listing Denied" + bcolors.ENDC)
 	except requests.RequestException as e:
 		print(e)
+
+def getBuckedNameFromHost(bucket_host):
+	try:
+		r = requests.get("http://" + bucket_host)
+		if r.status_code == 200 and r.headers['content-type'] == 'application/xml' and r.headers['Server'] == 'AmazonS3':
+			soup = BeautifulSoup(r.text, 'xml')
+			processBucket(soup.Name.text)
+		else:
+			print(bcolors.OKBLUE + bucket_host + " points to S3 but no bucket name could be parsed" + bcolors.ENDC)			
+	except requests.RequestException as e:
+		print(e)
+
 
 if __name__ == '__main__':
 	import sys
