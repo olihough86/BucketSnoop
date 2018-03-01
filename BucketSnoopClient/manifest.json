@@ -1,0 +1,15 @@
+{
+    "description": "Highlights AWS s3 buckets while you browse",
+    "manifest_version": 2,
+    "name": "BucketSnoop",
+    "version": "1.0",
+  
+    "permissions": [
+      "webRequest",
+      "<all_urls>"
+    ],
+  
+    "background": {
+      "scripts": ["bucketsnoop.js"]
+    }
+  }
