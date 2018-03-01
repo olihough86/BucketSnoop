@@ -29,40 +29,45 @@ class MyServerProtocol(WebSocketServerProtocol):
 		mtype = msg['type']
 		if mtype == 1:
 			bucket_name = msg['bucketName']
-			print("***********************************************************")
-			print("Processing bucket: {0}".format(bucket_name))
-			try:
-				client = boto3.client('s3')
-				bucket_acl = client.get_bucket_acl(Bucket=bucket_name)
-				for p in bucket_acl['Grants']:
-					if 'URI' in p['Grantee']:
-						if p['Grantee']['URI'] == 'http://acs.amazonaws.com/groups/global/AllUsers':
-							if p['Permission'] == 'READ' or p['Permission'] == 'READ_ACP':
-								print("All Users: " + bcolors.WARNING + p['Permission'] + bcolors.ENDC)
-							if p['Permission'] == 'WRITE' or p['Permission'] == 'FULL_CONTROL' or p['Permission'] == 'WRITE_ACP':
-								print("All Users: " + bcolors.FAIL + p['Permission'] + bcolors.ENDC)
-						if p['Grantee']['URI'] == 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers':
-							if p['Permission'] == 'READ' or p['Permission'] == 'READ_ACP':
-								print("Authenticated Users: " + bcolors.WARNING + p['Permission'] + bcolors.ENDC)
-							if p['Permission'] == 'WRITE' or p['Permission'] == 'FULL_CONTROL' or p['Permission'] == 'WRITE_ACP':
-								print("Authenticated Users: " + bcolors.FAIL + p['Permission'] + bcolors.ENDC)
-			except ClientError as e:
-				if e.response['Error']['Code'] == 'AccessDenied':
-					print(bcolors.OKGREEN + "ACL Read Denied" + bcolors.ENDC)
-			try:
-				r = requests.get('http://' + bucket_name + '.s3.amazonaws.com' )
-				if r.status_code == 200:
-					print(bcolors.FAIL + "Object Listing Allowed!" + bcolors.ENDC)
-				else:
-					print(bcolors.OKGREEN + "Object Listing Denied" + bcolors.ENDC)
-			except requests.RequestException as e:
-				print(e)
-
+			processBucket(bucket_name)
 		if mtype == 2:
 			print(bcolors.OKBLUE + "File: " + msg['url'] + " - served from s3" + bcolors.ENDC)
 	
 	def onClose(self, wasClean, code, reason):
 		print("WebSocket connection closed: {0}".format(reason))
+
+	def getNameFromOpenBucket(self, bucket_host):
+		pass
+
+def processBucket(bucket_name):
+	print("***********************************************************")
+	print("Processing bucket: {0}".format(bucket_name))
+	try:
+		client = boto3.client('s3')
+		bucket_acl = client.get_bucket_acl(Bucket=bucket_name)
+		for p in bucket_acl['Grants']:
+			if 'URI' in p['Grantee']:
+				if p['Grantee']['URI'] == 'http://acs.amazonaws.com/groups/global/AllUsers':
+					if p['Permission'] == 'READ' or p['Permission'] == 'READ_ACP':
+						print("All Users: " + bcolors.WARNING + p['Permission'] + bcolors.ENDC)
+					if p['Permission'] == 'WRITE' or p['Permission'] == 'FULL_CONTROL' or p['Permission'] == 'WRITE_ACP':
+						print("All Users: " + bcolors.FAIL + p['Permission'] + bcolors.ENDC)
+				if p['Grantee']['URI'] == 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers':
+					if p['Permission'] == 'READ' or p['Permission'] == 'READ_ACP':
+						print("Authenticated Users: " + bcolors.WARNING + p['Permission'] + bcolors.ENDC)
+					if p['Permission'] == 'WRITE' or p['Permission'] == 'FULL_CONTROL' or p['Permission'] == 'WRITE_ACP':
+						print("Authenticated Users: " + bcolors.FAIL + p['Permission'] + bcolors.ENDC)
+	except ClientError as e:
+		if e.response['Error']['Code'] == 'AccessDenied':
+			print(bcolors.OKGREEN + "ACL Read Denied" + bcolors.ENDC)
+	try:
+		r = requests.get('http://' + bucket_name + '.s3.amazonaws.com' )
+		if r.status_code == 200:
+			print(bcolors.FAIL + "Object Listing Allowed!" + bcolors.ENDC)
+		else:
+			print(bcolors.OKGREEN + "Object Listing Denied" + bcolors.ENDC)
+	except requests.RequestException as e:
+		print(e)
 
 if __name__ == '__main__':
 	import sys
