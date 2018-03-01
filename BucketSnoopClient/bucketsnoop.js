@@ -41,9 +41,8 @@ function logHeaders(requestDetails) {
         var url = new URL(requestDetails.url);
         
         if (url) {
-            if (!localStorage.getItem(url)) {
-                console.log(url);
-                localStorage.setItem(url, 1);
+            if (!localStorage.getItem(url.hostname)) {
+                localStorage.setItem(url.hostname, 1);
                 var msg = {
                     "type": 2,
                     "url": url
