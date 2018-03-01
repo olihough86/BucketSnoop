@@ -12,15 +12,31 @@ Clone the repo
 
 Change to the /BucketSnoopServer/ directory
 
-create a venv $ python3 -m venv .venv
+create a venv
 
-activate your venv $ source .venv/bin/activate
+```
+python3 -m venv .venv
+```
+activate your venv 
 
-upgrade pip $ pip install --upgrade pip
+```
+source .venv/bin/activate
+```
+upgrade pip
 
-install requiements $ pip install -r requirements
+```
+pip install --upgrade pip
+```
+install requiements 
+```
+pip install -r requirements
+```
+start server 
 
-start server $ python server.py 
+```
+python server.py 
+```
+
 
 ## Client
 open Firefox and go to about:debugging
