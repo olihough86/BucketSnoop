@@ -43,7 +43,7 @@ function logHeaders(requestDetails) {
     if (serverLower) {
         server = serverLower;
     }
-    
+    // send name of parsed S3 bucket to server
     if (server && requestDetails.statusCode !== 404 && server.value == "AmazonS3" && requestDetails.url.search("amazonaws.com")!== -1) {
         
         var url = new URL(requestDetails.url);
@@ -60,7 +60,7 @@ function logHeaders(requestDetails) {
             }
         }
     }
-
+    // Send hostname of CNAME'd S3 bucket to server
     if (server && requestDetails.statusCode !== 404 && server.value == "AmazonS3" && requestDetails.url.search("amazonaws.com") === -1) {
         var url = new URL(requestDetails.url);
         
@@ -75,7 +75,7 @@ function logHeaders(requestDetails) {
             }
         }
     }
-
+    // Send hostname and path of Azure blob container to server
     if (server && requestDetails.statusCode !== 404 && server.value == "Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0" && requestDetails.url.search("blob.core.windows.net") !== -1) {
         var url = new URL(requestDetails.url);
 
@@ -91,7 +91,7 @@ function logHeaders(requestDetails) {
             }
         }
     }
-
+    // Send name of parsed Google bucket to server
     if (server && requestDetails.statusCode !== 404 && server.value == "UploadServer" && requestDetails.url.search("storage.googleapis.com") !== -1) {
         var url = new URL(requestDetails.url);
         bucketName = parseBucketName(url);
@@ -107,7 +107,7 @@ function logHeaders(requestDetails) {
             }
         }
     }
-
+    // Send hostname of a CNAME'd Google bucket to server
     if (server && requestDetails.statusCode !== 404 && server.value == "UploadServer" && requestDetails.url.search("storage.googleapis.com") === -1) {
         var url = new URL(requestDetails.url);
 
@@ -128,7 +128,7 @@ function logHeaders(requestDetails) {
 // For now clear local storage each time we load the extention.
 localStorage.clear(); 
 
-// Creat socked connection
+// Create socket connection
 const socket = new WebSocket('ws://127.0.0.1:9000');
 socket.addEventListener('message', function (event) {
     console.log('Message from server ', event.data);
