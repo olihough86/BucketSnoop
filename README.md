@@ -58,7 +58,7 @@ Find /BucketSnoopClient/bucketsnoop.js and load it
 
 The client should now be loaded and connected to the server, while browsing watch the output of the server as discovered buckets are checked
 
-If a bucket name can be parsed it will;
+If a S3 bucket can be parsed it will;
 
 * Try to pull the bucket ACL and list the permissions
 * Check if objects can be listed
