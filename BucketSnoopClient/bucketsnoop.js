@@ -11,7 +11,8 @@ function parseBucketName(bucket) {
         bucketName = bucket.hostname.replace(/\.(s3|s3-.*)\.amazonaws\.com/g, '');
         return bucketName;
     }
-    if (/(s3|s3-)[a-zA-Z0-9-]*.amazonaws.com\/[a-zA-Z0-9-\.]*\/.*/g.test(bucket.hostname + bucket.pathname)) {
+    //if (/(s3|s3-)[a-zA-Z0-9-]*.amazonaws.com\/[a-zA-Z0-9-\.]*\/.*/g.test(bucket.hostname + bucket.pathname)) {
+    if (/(s3-[a-zA-Z0-9-]*|s3)\.([a-zA-Z0-9-]*\.com|[a-zA-Z0-9-]*\.amazonaws\.com)\/.*/g.test(bucket.hostname + bucket.pathname)) {
         a = bucket.pathname.split("/");
         bucketName = a[1];
         return bucketName;
