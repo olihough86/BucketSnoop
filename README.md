@@ -1,5 +1,5 @@
 # BucketSnoop
-A Firefox extension and WebSocket handler that checks s3 buckets while your browse.
+A Firefox extension and WebSocket handler that checks s3 buckets while your browse. All the checks are passive, I'm not a fan of just throwing files into storage that isn't mine, it's easy enough to check manually with aws cli.
 
 ### It works but it's nowhere near finished, use with care.
 
