@@ -6,7 +6,7 @@ A Firefox extension and WebSocket handler that checks s3 buckets while your brow
 # Setup
 ## Server
 
-* Probably needs Python 3, I've not even bothered testing Python 2
+* Probably needs Python 3, I've not even bothered testing Python 2.
 * For now you need [AWS CLI](https://aws.amazon.com/cli/) installed and configured, boto3 looks in ~/.aws/credentials 
 
 Clone the repo
