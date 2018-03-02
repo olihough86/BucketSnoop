@@ -67,4 +67,8 @@ If a bucket name is not parsed it will;
 
 * Highlight that the host is pointed in some way to S3
 
+If an Azure blob container can be parsed it will;
+
+* Check if the blobs can be listed
+
 URIs are cached in local storage to avoid repeat requests, currently this is cleared each time the add-on is reloaded.
