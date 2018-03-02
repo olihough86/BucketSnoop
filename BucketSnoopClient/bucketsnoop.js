@@ -1,6 +1,7 @@
 // OK, Yes there is a lot of repeated code going on. I don't code for a living.
 // I will refactor it eventually, maybe.
 
+// Finds a value by name in an array
 function getItemByName(anArray, name) {
     for (var i = 0; i < anArray.length; i += 1) {
         if (anArray[i].name === name) {
@@ -32,11 +33,11 @@ function parseBucketName(bucket) {
         bucketName = a[1];
         return bucketName;
     }
-
+    // return false if parsing fails
     return false;
 }
-
-function logHeaders(requestDetails) {
+// Magic starts here
+function bucketSnoop(requestDetails) {
     var server = getItemByName(requestDetails.responseHeaders, "Server");
     var serverLower = getItemByName(requestDetails.responseHeaders, "server");
 
@@ -136,7 +137,7 @@ socket.addEventListener('message', function (event) {
 
 // listener
 browser.webRequest.onHeadersReceived.addListener(
-    logHeaders,
+    bucketSnoop,
     {urls: ["<all_urls>"]},
     ["responseHeaders"]
 );
