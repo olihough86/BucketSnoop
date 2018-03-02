@@ -5,18 +5,31 @@ function getItemByName(anArray, name) {
         }
     }
 }
-
+// Parse bucket names from URLs (Azure is server side only)
 function parseBucketName(bucket) {
+    // Amazon S3 - <bucket>.s3.amazonaws.com
     if (/[a-zA-Z0-9-\.]*\.(s3|s3-.*).amazonaws.com/g.test(bucket.hostname)) {
         bucketName = bucket.hostname.replace(/\.(s3|s3-.*)\.amazonaws\.com/g, '');
         return bucketName;
     }
-    //if (/(s3|s3-)[a-zA-Z0-9-]*.amazonaws.com\/[a-zA-Z0-9-\.]*\/.*/g.test(bucket.hostname + bucket.pathname)) {
+    // Amazon S3 - s3.amazonaws.com/<bucket> || s3-<region>.amazonaws.com/<bucket>
     if (/(s3-[a-zA-Z0-9-]*|s3)\.([a-zA-Z0-9-]*\.com|[a-zA-Z0-9-]*\.amazonaws\.com)\/.*/g.test(bucket.hostname + bucket.pathname)) {
         a = bucket.pathname.split("/");
         bucketName = a[1];
         return bucketName;
     }
+    // Google - <bucket>.storage.googleapis.com
+    if (/[a-zA-Z0-9-\.]*\.storage\.googleapis\.com/g.test(bucket.hostname)) {
+        bucketName = bucket.hostname.replace(/\.storage\.googleapis\.com/g, '');
+        return bucketName;
+    }
+    // Google - storage.googleapiscom/<bucket>
+    if (/storage.googleapis.com\/[a-zA-Z0-9-\.]*/g.test(bucket.hostname + bucket.pathname)) {
+        a = bucket.pathname.split("/");
+        bucketName = a[1];
+        return bucketName;
+    }
+
     return false;
 }
 
@@ -27,15 +40,15 @@ function logHeaders(requestDetails) {
     if (serverLower) {
         server = serverLower;
     }
-
+    
     if (server && requestDetails.statusCode !== 404 && server.value == "AmazonS3" && requestDetails.url.search("amazonaws.com")!== -1) {
         
-        var bucket = new URL(requestDetails.url);
-        bucketName = parseBucketName(bucket);
+        var url = new URL(requestDetails.url);
+        bucketName = parseBucketName(url);
         
         if (bucketName) {
-            if (!localStorage.getItem(bucketName)) {
-                localStorage.setItem(bucketName, 1);
+            if (!localStorage.getItem(bucketName + "-AWS")) {
+                localStorage.setItem(bucketName + "-AWS", 1);
                 var msg = {
                     "type": 1,
                     "bucketName": bucketName
@@ -44,6 +57,7 @@ function logHeaders(requestDetails) {
             }
         }
     }
+
     if (server && requestDetails.statusCode !== 404 && server.value == "AmazonS3" && requestDetails.url.search("amazonaws.com") === -1) {
         var url = new URL(requestDetails.url);
         
@@ -58,6 +72,7 @@ function logHeaders(requestDetails) {
             }
         }
     }
+
     if (server && requestDetails.statusCode !== 404 && server.value == "Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0" && requestDetails.url.search("blob.core.windows.net") !== -1) {
         var url = new URL(requestDetails.url);
 
@@ -68,6 +83,22 @@ function logHeaders(requestDetails) {
                 var msg = {
                     "type": 3,
                     "azureContainer": url.hostname + "/" + path[1]
+                }
+                socket.send(JSON.stringify(msg));
+            }
+        }
+    }
+
+    if (server && requestDetails.statusCode !== 404 && server.value == "UploadServer" && requestDetails.url.search("storage.googleapis.com") !== -1) {
+        var url = new URL(requestDetails.url);
+        bucketName = parseBucketName(url);
+
+        if(bucketName) {
+            if (!localStorage.getItem(bucketName + "-Google")) {
+                localStorage.setItem(bucketName + "-Google", 1);
+                var msg = {
+                    "type": 4,
+                    "googleBucket": bucketName
                 }
                 socket.send(JSON.stringify(msg));
             }
