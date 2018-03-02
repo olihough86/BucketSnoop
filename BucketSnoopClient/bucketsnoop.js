@@ -104,6 +104,22 @@ function logHeaders(requestDetails) {
             }
         }
     }
+
+    if (server && requestDetails.statusCode !== 404 && server.value == "UploadServer" && requestDetails.search("storage.googleapis.com") === -1) {
+        var url = new URL(requestDetails.url);
+
+        if (url) {
+            if (!localStorage.getItem(url.hostname)) {
+                localStorage.setItem(url.hostname, 1);
+                var msg = {
+                    "type": 5,
+                    "bucketHost": url.hostname
+                }
+                socket.send(JSON.stringify(msg));
+            }
+        }
+    }
+
   }
 
 localStorage.clear(); 
