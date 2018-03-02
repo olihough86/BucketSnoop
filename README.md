@@ -48,11 +48,11 @@ python server.py
 
 
 ## Client
-open Firefox and go to about:debugging
+Open Firefox and go to about:debugging
 
-click on "Load Temporary Add-on"
+Click on "Load Temporary Add-on"
 
-find /BucketSnoopClient/bucketsnoop.js and load it
+Find /BucketSnoopClient/bucketsnoop.js and load it
 
 # Usage
 
