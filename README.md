@@ -67,7 +67,7 @@ If a bucket name is not parsed it will;
 
 * Highlight that the host is pointed in some way to S3
 
-If an Azure blob container cen be parse it wil;
+If an Azure blob container can be parse it wil;
 
 * Check if the blobs can be listed
 
