@@ -56,7 +56,7 @@ Find /BucketSnoopClient/bucketsnoop.js and load it
 
 # Usage
 
-The client should now be loaded and connected to the server, while browsing watch the output of the server as discovered buckets are checked.
+The client should now be loaded and connected to the server, while browsing watch the output of the server as discovered buckets are checked
 
 If a bucket name can be parsed it will;
 
