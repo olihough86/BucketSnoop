@@ -1,3 +1,6 @@
+// OK, Yes there is a lot of repeated code going on. I don't code for a living.
+// I will refactor it eventually, maybe.
+
 function getItemByName(anArray, name) {
     for (var i = 0; i < anArray.length; i += 1) {
         if (anArray[i].name === name) {
@@ -122,14 +125,16 @@ function logHeaders(requestDetails) {
 
   }
 
+// For now clear local storage each time we load the extention.
 localStorage.clear(); 
 
+// Creat socked connection
 const socket = new WebSocket('ws://127.0.0.1:9000');
-
 socket.addEventListener('message', function (event) {
     console.log('Message from server ', event.data);
 });
-  
+
+// listener
 browser.webRequest.onHeadersReceived.addListener(
     logHeaders,
     {urls: ["<all_urls>"]},
