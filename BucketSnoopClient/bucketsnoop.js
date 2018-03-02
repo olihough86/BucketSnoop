@@ -21,6 +21,12 @@ function parseBucketName(bucket) {
 
 function logHeaders(requestDetails) {
     var server = getItemByName(requestDetails.responseHeaders, "Server");
+    var serverLower = getItemByName(requestDetails.responseHeaders, "server");
+
+    if (serverLower) {
+        server = serverLower;
+    }
+
     if (server && requestDetails.statusCode !== 404 && server.value == "AmazonS3" && requestDetails.url.search("amazonaws.com")!== -1) {
         
         var bucket = new URL(requestDetails.url);
@@ -46,6 +52,21 @@ function logHeaders(requestDetails) {
                 var msg = {
                     "type": 2,
                     "bucketHost": url.hostname
+                }
+                socket.send(JSON.stringify(msg));
+            }
+        }
+    }
+    if (server && requestDetails.statusCode !== 404 && server.value == "Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0" && requestDetails.url.search("blob.core.windows.net") !== -1) {
+        var url = new URL(requestDetails.url);
+
+        if (url) {
+            if (!localStorage.getItem(url.hostname)) {
+                localStorage.setItem(url.hostname, 1);
+                var path = url.pathname.split('/');
+                var msg = {
+                    "type": 3,
+                    "azureContainer": url.hostname + "/" + path[1]
                 }
                 socket.send(JSON.stringify(msg));
             }

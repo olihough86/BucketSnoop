@@ -32,9 +32,24 @@ class MyServerProtocol(WebSocketServerProtocol):
 		if mtype == 2:
 			bucket_host = msg['bucketHost']
 			getBuckedNameFromHost(bucket_host)
+		if mtype == 3:
+			azure_container = msg['azureContainer']
+			processAzureContainer(azure_container)
 	
 	def onClose(self, wasClean, code, reason):
 		print("WebSocket connection closed: {0}".format(reason))
+
+def processAzureContainer(azure_container):
+	print("***********************************************************")
+	print("Processing Azure container: {0}".format(azure_container))
+	try:
+		r = requests.get('http://' + azure_container + '?restype=container&comp=list&maxresults=1')
+		if r.status_code == 200:
+			print(bcolors.FAIL + "Blobs Listing Allowed!" + bcolors.ENDC)
+		else:
+			print(bcolors.OKGREEN + "Blobs Listing Denied" + bcolors.ENDC)
+	except requests.RequestException as e:
+		print(e)
 
 def processBucket(bucket_name):
 	print("***********************************************************")
