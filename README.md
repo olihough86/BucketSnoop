@@ -71,4 +71,9 @@ If an Azure blob container can be parsed it will;
 
 * Check if the blobs can be listed
 
+If a Google Cloud bucket can be parsed it will;
+
+* Try to pull the bucket ACL (ACL parsing not yet finished)
+* Check if objects can be listed
+
 URIs are cached in local storage to avoid repeat requests, currently this is cleared each time the add-on is reloaded.
