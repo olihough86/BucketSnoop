@@ -105,7 +105,7 @@ function logHeaders(requestDetails) {
         }
     }
 
-    if (server && requestDetails.statusCode !== 404 && server.value == "UploadServer" && requestDetails.search("storage.googleapis.com") === -1) {
+    if (server && requestDetails.statusCode !== 404 && server.value == "UploadServer" && requestDetails.url.search("storage.googleapis.com") === -1) {
         var url = new URL(requestDetails.url);
 
         if (url) {
