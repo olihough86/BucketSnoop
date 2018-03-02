@@ -124,6 +124,8 @@ def getGoogleBucketNameFromHost(bucket_host):
 		if r.status_code == 200 and r.headers['content-type'] == 'application/xml' and r.headers['server'] == 'UploadServer':
 			soup = BeautifulSoup(r.text, 'xml')
 			processGoogleBucket(soup.Name.text)
+		else:
+			print(bcolors.OKBLUE + bucket_host + " points to Google storage but no bucket name could be parsed" + bcolors.ENDC)
 	except requests.RequestException as e:
 		print(e)
 
