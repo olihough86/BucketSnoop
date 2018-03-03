@@ -99,11 +99,22 @@ def processBucket(bucket_name):
 		if e.response['Error']['Code'] == 'AccessDenied':
 			print(bcolors.OKGREEN + "ACL Read Denied" + bcolors.ENDC)
 	try:
+		client = boto3.client('s3')
+		a_list = client.list_objects(
+			Bucket=bucket_name,
+			MaxKeys=1
+		)
+		if a_list:
+			print(bcolors.FAIL + "Authenticated Object Listing Allowed!" + bcolors.ENDC)
+	except ClientError as e:
+		if e.response['Error']['Code'] == 'AccessDenied':
+			print(bcolors.OKGREEN + "Authenticated Object Listing Denied" + bcolors.ENDC)
+	try:
 		r = requests.get('http://' + bucket_name + '.s3.amazonaws.com' )
 		if r.status_code == 200:
-			print(bcolors.FAIL + "Object Listing Allowed!" + bcolors.ENDC)
+			print(bcolors.FAIL + "Public Object Listing Allowed!" + bcolors.ENDC)
 		else:
-			print(bcolors.OKGREEN + "Object Listing Denied" + bcolors.ENDC)
+			print(bcolors.OKGREEN + "Public Object Listing Denied" + bcolors.ENDC)
 	except requests.RequestException as e:
 		print(e)
 
