@@ -61,9 +61,10 @@ The client should now be loaded and connected to the server, while browsing watc
 If a S3 bucket can be parsed it will;
 
 * Try to pull the bucket ACL and list the permissions
-* Check if objects can be listed
+* Check if objects can be listed with auth
+* Check if objects can be listed without auth
 
-If a bucket name is not parsed it will;
+If an bucket name is not parsed it will;
 
 * Highlight that the host is pointed in some way to S3
 
