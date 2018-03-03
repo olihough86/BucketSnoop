@@ -1,6 +1,14 @@
 // OK, Yes there is a lot of repeated code going on. I don't code for a living.
 // I will refactor it eventually, maybe.
 
+// Function to open the WebSocket connection to the server, retry every 5seconds if server dies
+function openSocket(websocketlocation) {
+    socket = new WebSocket(websocketlocation);
+    socket.onclose = function() {
+        setTimeout(function(){openSocket(websocketlocation)}, 5000);
+    };
+}
+
 // Finds a value by name in an array
 function getItemByName(anArray, name) {
     for (var i = 0; i < anArray.length; i += 1) {
@@ -127,13 +135,10 @@ function bucketSnoop(requestDetails) {
   }
 
 // For now clear local storage each time we load the extention.
-localStorage.clear(); 
+localStorage.clear();
 
 // Create socket connection
-const socket = new WebSocket('ws://127.0.0.1:9000');
-socket.addEventListener('message', function (event) {
-    console.log('Message from server ', event.data);
-});
+openSocket('ws://127.0.0.1:9000');
 
 // listener
 browser.webRequest.onHeadersReceived.addListener(
