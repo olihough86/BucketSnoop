@@ -28,24 +28,29 @@ class MyServerProtocol(WebSocketServerProtocol):
 		mtype = msg['type']
 		if mtype == 1:
 			bucket_name = msg['bucketName']
-			processBucket(bucket_name)
+			origin_url = msg['originUrl']
+			processBucket(bucket_name, origin_url)
 		if mtype == 2:
 			bucket_host = msg['bucketHost']
-			getS3BuckedNameFromHost(bucket_host)
+			origin_url = msg['originUrl']
+			getS3BuckedNameFromHost(bucket_host, origin_url)
 		if mtype == 3:
 			azure_container = msg['azureContainer']
-			processAzureContainer(azure_container)
+			origin_url = msg['originUrl']
+			processAzureContainer(azure_container, origin_url)
 		if mtype == 4:
 			google_bucket = msg['googleBucket']
-			processGoogleBucket(google_bucket)
+			origin_url = msg['originUrl']
+			processGoogleBucket(google_bucket, origin_url)
 		if mtype == 5:
 			bucket_host = msg['bucketHost']
-			getGoogleBucketNameFromHost(bucket_host)
+			origin_url = msg['originUrl']
+			getGoogleBucketNameFromHost(bucket_host, origin_url)
 	
 	def onClose(self, wasClean, code, reason):
 		print("WebSocket connection closed: {0}".format(reason))
 
-def processGoogleBucket(google_bucket):
+def processGoogleBucket(google_bucket, origin_url):
 	print("***********************************************************")
 	print("Processing Google bucket: {0}".format(google_bucket))
 	try:
@@ -65,7 +70,7 @@ def processGoogleBucket(google_bucket):
 	except requests.RequestException as e:
 		print(e)
 
-def processAzureContainer(azure_container):
+def processAzureContainer(azure_container, origin_url):
 	print("***********************************************************")
 	print("Processing Azure blob container: {0}".format(azure_container))
 	try:
@@ -77,9 +82,10 @@ def processAzureContainer(azure_container):
 	except requests.RequestException as e:
 		print(e)
 
-def processBucket(bucket_name):
+def processBucket(bucket_name, origin_url):
 	print("***********************************************************")
 	print("Processing S3 bucket: {0}".format(bucket_name))
+	print("Origin: {0}".format(origin_url))
 	try:
 		client = boto3.client('s3')
 		bucket_acl = client.get_bucket_acl(Bucket=bucket_name)
@@ -118,23 +124,23 @@ def processBucket(bucket_name):
 	except requests.RequestException as e:
 		print(e)
 
-def getS3BuckedNameFromHost(bucket_host):
+def getS3BuckedNameFromHost(bucket_host, origin_url):
 	try:
 		r = requests.get("http://" + bucket_host)
 		if r.status_code == 200 and r.headers['content-type'] == 'application/xml' and r.headers['Server'] == 'AmazonS3':
 			soup = BeautifulSoup(r.text, 'xml')
-			processBucket(soup.Name.text)
+			processBucket(soup.Name.text, origin_url)
 		else:
 			print(bcolors.OKBLUE + bucket_host + " points to S3 but no bucket name could be parsed" + bcolors.ENDC)			
 	except requests.RequestException as e:
 		print(e)
 
-def getGoogleBucketNameFromHost(bucket_host):
+def getGoogleBucketNameFromHost(bucket_host, origin_url):
 	try:
 		r = requests.get('http://' + bucket_host)
 		if r.status_code == 200 and r.headers['content-type'] == 'application/xml' and r.headers['server'] == 'UploadServer':
 			soup = BeautifulSoup(r.text, 'xml')
-			processGoogleBucket(soup.Name.text)
+			processGoogleBucket(soup.Name.text, origin_url)
 		else:
 			print(bcolors.OKBLUE + bucket_host + " points to Google storage but no bucket name could be parsed" + bcolors.ENDC)
 	except requests.RequestException as e:

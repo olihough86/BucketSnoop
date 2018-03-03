@@ -46,6 +46,9 @@ function parseBucketName(bucket) {
 }
 // Magic starts here
 function bucketSnoop(requestDetails) {
+    if (!requestDetails.originUrl) {
+        requestDetails.originUrl = requestDetails.url;
+    }
     var server = getItemByName(requestDetails.responseHeaders, "Server");
     var serverLower = getItemByName(requestDetails.responseHeaders, "server");
 
@@ -57,13 +60,14 @@ function bucketSnoop(requestDetails) {
         
         var url = new URL(requestDetails.url);
         bucketName = parseBucketName(url);
-        
+        console.log(requestDetails.originUrl)
         if (bucketName) {
             if (!localStorage.getItem(bucketName + "-AWS")) {
                 localStorage.setItem(bucketName + "-AWS", 1);
                 var msg = {
                     "type": 1,
-                    "bucketName": bucketName
+                    "bucketName": bucketName,
+                    "originUrl": requestDetails.originUrl
                 }
                 socket.send(JSON.stringify(msg));
             }
@@ -78,7 +82,8 @@ function bucketSnoop(requestDetails) {
                 localStorage.setItem(url.hostname, 1);
                 var msg = {
                     "type": 2,
-                    "bucketHost": url.hostname
+                    "bucketHost": url.hostname,
+                    "originUrl": requestDetails.originUrl
                 }
                 socket.send(JSON.stringify(msg));
             }
@@ -94,7 +99,8 @@ function bucketSnoop(requestDetails) {
                 var path = url.pathname.split('/');
                 var msg = {
                     "type": 3,
-                    "azureContainer": url.hostname + "/" + path[1]
+                    "azureContainer": url.hostname + "/" + path[1],
+                    "originUrl": requestDetails.originUrl
                 }
                 socket.send(JSON.stringify(msg));
             }
@@ -110,7 +116,8 @@ function bucketSnoop(requestDetails) {
                 localStorage.setItem(bucketName + "-Google", 1);
                 var msg = {
                     "type": 4,
-                    "googleBucket": bucketName
+                    "googleBucket": bucketName,
+                    "originUrl": requestDetails.originUrl
                 }
                 socket.send(JSON.stringify(msg));
             }
@@ -125,7 +132,8 @@ function bucketSnoop(requestDetails) {
                 localStorage.setItem(url.hostname, 1);
                 var msg = {
                     "type": 5,
-                    "bucketHost": url.hostname
+                    "bucketHost": url.hostname,
+                    "originUrl": requestDetails.originUrl
                 }
                 socket.send(JSON.stringify(msg));
             }
@@ -141,7 +149,7 @@ localStorage.clear();
 openSocket('ws://127.0.0.1:9000');
 
 // listener
-browser.webRequest.onHeadersReceived.addListener(
+browser.webRequest.onCompleted.addListener(
     bucketSnoop,
     {urls: ["<all_urls>"]},
     ["responseHeaders"]
