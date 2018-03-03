@@ -64,7 +64,7 @@ If a S3 bucket can be parsed it will;
 * Check if objects can be listed with auth
 * Check if objects can be listed without auth
 
-If an bucket name is not parsed it will;
+If a bucket name is not parsed it will;
 
 * Highlight that the host is pointed in some way to S3
 
