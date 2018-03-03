@@ -53,6 +53,7 @@ class MyServerProtocol(WebSocketServerProtocol):
 def processGoogleBucket(google_bucket, origin_url):
 	print("***********************************************************")
 	print("Processing Google bucket: {0}".format(google_bucket))
+	print("Origin: {0}".format(origin_url))
 	try:
 		r = requests.get('http://' + google_bucket + '.storage.googleapis.com/?acl')
 		if r.status_code == 200:
@@ -73,6 +74,7 @@ def processGoogleBucket(google_bucket, origin_url):
 def processAzureContainer(azure_container, origin_url):
 	print("***********************************************************")
 	print("Processing Azure blob container: {0}".format(azure_container))
+	print("Origin: {0}".format(origin_url))
 	try:
 		r = requests.get('http://' + azure_container + '?restype=container&comp=list&maxresults=1')
 		if r.status_code == 200:
