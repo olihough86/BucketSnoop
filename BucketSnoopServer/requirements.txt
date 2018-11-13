@@ -12,7 +12,7 @@ idna==2.6
 incremental==17.5.0
 jmespath==0.9.3
 python-dateutil==2.6.1
-requests==2.18.4
+requests==2.20.0
 s3transfer==0.1.13
 six==1.11.0
 Twisted==17.9.0
@@ -36,7 +36,6 @@ incremental==17.5.0
 jmespath==0.9.3
 lxml==4.1.1
 python-dateutil==2.6.1
-requests==2.18.4
 s3transfer==0.1.13
 six==1.11.0
 Twisted==17.9.0
