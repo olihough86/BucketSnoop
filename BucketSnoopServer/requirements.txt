@@ -17,7 +17,7 @@ s3transfer==0.1.13
 six==1.11.0
 Twisted==17.9.0
 txaio==2.8.2
-urllib3==1.22
+urllib3==1.23
 zope.interface==4.4.3
 attrs==17.4.0
 autobahn==17.10.1
