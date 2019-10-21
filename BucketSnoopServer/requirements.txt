@@ -15,7 +15,7 @@ python-dateutil==2.6.1
 requests==2.20.0
 s3transfer==0.1.13
 six==1.11.0
-Twisted==17.9.0
+Twisted==19.7.0
 txaio==2.8.2
 urllib3==1.23
 zope.interface==4.4.3
@@ -38,7 +38,7 @@ lxml==4.1.1
 python-dateutil==2.6.1
 s3transfer==0.1.13
 six==1.11.0
-Twisted==17.9.0
+Twisted==19.7.0
 txaio==2.8.2
 urllib3==1.22
 zope.interface==4.4.3
